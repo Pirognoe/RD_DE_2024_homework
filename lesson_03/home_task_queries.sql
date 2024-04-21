@@ -9,6 +9,8 @@
 Результат відсортувати за спаданням.
 */
 -- SQL code goes here...
+
+-- https://www.getdbt.com/blog/write-better-sql-a-defense-of-group-by-1
 WITH
 	FILM_PER_CATEGORY_COUNT AS (
 		SELECT
@@ -17,16 +19,16 @@ WITH
 		FROM
 			PUBLIC.FILM_CATEGORY
 		GROUP BY
-			1 -- https://www.getdbt.com/blog/write-better-sql-a-defense-of-group-by-1
-		ORDER BY
-			2 DESC
+			1
 	)
 SELECT
 	CATEGORY.NAME,
 	FILM_PER_CATEGORY_COUNT.FILM_COUNT
 FROM
 	FILM_PER_CATEGORY_COUNT
-	JOIN PUBLIC.CATEGORY USING (CATEGORY_ID);
+	JOIN PUBLIC.CATEGORY USING (CATEGORY_ID)
+ORDER BY
+	FILM_COUNT DESC;
 
 
 /*
