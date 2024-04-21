@@ -111,10 +111,40 @@ WHERE
 Запит має бути без оператора IN
 */
 -- SQL code goes here...
-
+SELECT
+	FILM.TITLE
+FROM
+	PUBLIC.FILM
+	LEFT JOIN PUBLIC.INVENTORY USING (FILM_ID)
+WHERE
+	INVENTORY.INVENTORY_ID IS NULL;
 
 /*
 5.
-Вивести топ 3 актори, які найбільше зʼявлялись в категорії фільмів “Children”.
+Вивести топ 3 акторів, які найбільше зʼявлялись в категорії фільмів “Children”.
 */
 -- SQL code goes here...
+WITH
+	ACTOR_OF_CHILDREN_FILMS_COUNT AS (
+		SELECT
+			ACTOR_ID,
+			COUNT(*) AS ACTOR_FILM_PARTICIPATION_COUNT
+		FROM
+			PUBLIC.FILM_ACTOR
+			JOIN FILM_CATEGORY USING (FILM_ID)
+			JOIN PUBLIC.CATEGORY USING (CATEGORY_ID)
+		WHERE
+			CATEGORY.NAME = 'Children'
+		GROUP BY
+			1
+	)
+SELECT
+	ACTOR.FIRST_NAME,
+	ACTOR.LAST_NAME
+FROM
+	ACTOR_OF_CHILDREN_FILMS_COUNT
+	JOIN PUBLIC.ACTOR USING (ACTOR_ID)
+ORDER BY
+	ACTOR_FILM_PARTICIPATION_COUNT DESC
+LIMIT
+	3;
