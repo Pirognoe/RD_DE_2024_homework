@@ -9,7 +9,24 @@
 Результат відсортувати за спаданням.
 */
 -- SQL code goes here...
-
+WITH
+	FILM_PER_CATEGORY_COUNT AS (
+		SELECT
+			CATEGORY_ID,
+			COUNT(*) AS FILM_COUNT
+		FROM
+			PUBLIC.FILM_CATEGORY
+		GROUP BY
+			1 -- https://www.getdbt.com/blog/write-better-sql-a-defense-of-group-by-1
+		ORDER BY
+			2 DESC
+	)
+SELECT
+	CATEGORY.NAME,
+	FILM_PER_CATEGORY_COUNT.FILM_COUNT
+FROM
+	FILM_PER_CATEGORY_COUNT
+	JOIN PUBLIC.CATEGORY USING (CATEGORY_ID);
 
 
 /*
